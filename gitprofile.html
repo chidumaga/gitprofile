@@ -49,26 +49,28 @@
     $('input.username').autocomplete({
       source: function( request, response){
         $.ajax({
-          url: "https://api.github.com/search/users",
-          data: { q: request.term },
-          dataType: "jsonp",
-          success: function( data ){
-            var input = ($('input.username').val());
+         url: "https://api.github.com/search/users",
+         data: { q: request.term },
+         dataType: "jsonp",
+         success: function( data ){
 
-            var JSONObjArr = data.data.items;
+          var input = ($('input.username').val())[0];
+          var user_logins = []
+          var users = data.data.items;
 
-            var LoginArr = JSONObjArr.map(function(user){
-               return user.login
-            }).filter(function(login){
-               return matchingFirstLetters(input, login)
-            })
+          for(var i=0; i < users.length; i++){
+             if(matchingFirstLetters(input, users[i].login)){
+              user_logins.push(users[i].login)
+             }
+           }
 
-            response(LoginArr);
+          response(user_logins);
           }
         });
       }
     });
   });
+
 
   </script>
 
